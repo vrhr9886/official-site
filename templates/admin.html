@@ -1,20 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin Dashboard</title>
+<title>Admin Panel</title>
+
 <style>
-body{font-family:Arial;background:#f4f6f9;margin:0}
-.top{background:#0b5ed7;color:#fff;padding:15px;font-size:20px}
-.box{padding:20px}
-.card{background:#fff;padding:15px;margin:10px;border-radius:8px;box-shadow:0 0 10px #ddd}
-.btn{background:#0b5ed7;color:#fff;padding:8px 12px;border:none;border-radius:5px}
+body{
+    margin:0;
+    font-family:Segoe UI, Arial;
+    background:#eef1f5;
+}
+
+/* sidebar */
+.sidebar{
+    width:220px;
+    height:100vh;
+    background:#0b5ed7;
+    color:white;
+    position:fixed;
+    padding-top:20px;
+}
+.sidebar h2{
+    text-align:center;
+}
+.sidebar a{
+    display:block;
+    color:white;
+    padding:12px 20px;
+    text-decoration:none;
+}
+.sidebar a:hover{
+    background:#084298;
+}
+
+/* top bar */
+.topbar{
+    margin-left:220px;
+    background:white;
+    padding:15px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* content */
+.content{
+    margin-left:220px;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="top">VRHR Soft Solutions - Admin Panel</div>
+<div class="sidebar">
+<h2>VRHR</h2>
+<a href="#">Dashboard</a>
+<a href="#">Employees</a>
+<a href="#">Attendance</a>
+<a href="#">Salary</a>
+<a href="#">Leave</a>
+<a href="#">Notice</a>
+<a href="/logout">Logout</a>
+</div>
 
-<div class="box">
+<div class="topbar">
+VRHR Soft Solutions - Admin Panel
+</div>
+
+<div class="content">
+
 <div class="card">
 <h3>Employees</h3>
 {% for e in employees %}
@@ -23,15 +85,11 @@ body{font-family:Arial;background:#f4f6f9;margin:0}
 </div>
 
 <div class="card">
-<h3>Quick Actions</h3>
-<button class="btn">Add Employee</button>
-<button class="btn">Update Salary</button>
-<button class="btn">Attendance</button>
-<button class="btn">Send Notice</button>
+<h3>System Status</h3>
+Company software running...
 </div>
 
-<a href="/logout">Logout</a>
-
 </div>
+
 </body>
 </html>
