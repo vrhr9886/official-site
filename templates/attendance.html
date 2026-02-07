@@ -3,7 +3,7 @@
 <head>
 <title>Attendance</title>
 <style>
-body{font-family:Arial;background:#eef1f5;margin:0}
+body{font-family:Arial;background:#eef1f5}
 .box{padding:30px}
 .card{background:white;padding:20px;border-radius:10px;width:400px}
 button{background:#0b5ed7;color:white;border:none;padding:10px 15px;border-radius:6px}
@@ -19,6 +19,12 @@ Employee Name:<br>
 <input name="name" style="width:100%;padding:8px"><br><br>
 <button>Mark Present</button>
 </form>
+
+<h4>Today Attendance</h4>
+{% for i in data %}
+{{i}} present<br>
+{% endfor %}
+
 <br>
 <a href="/admin">Back</a>
 </div>
