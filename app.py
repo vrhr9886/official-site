@@ -26,6 +26,9 @@ with app.app_context():
         db.session.add_all([admin,e1,e2,e3,e4])
         db.session.commit()
 
+# -------- ATTENDANCE STORAGE --------
+attendance_data = []
+
 # -------- LOGIN --------
 @app.route("/", methods=["GET","POST"])
 def login():
@@ -50,13 +53,23 @@ def login():
     </form>
     """
 
-# -------- ADMIN --------
+# -------- ADMIN DASHBOARD --------
 @app.route("/admin")
 def admin():
     if session.get("role")!="admin":
         return redirect("/")
     employees = Employee.query.all()
     return render_template("admin.html", employees=employees)
+
+# -------- ATTENDANCE PAGE --------
+@app.route("/attendance", methods=["GET","POST"])
+def attendance():
+    if session.get("role")!="admin":
+        return redirect("/")
+    if request.method=="POST":
+        name=request.form.get("name")
+        attendance_data.append(name)
+    return render_template("attendance.html", data=attendance_data)
 
 # -------- EMPLOYEE --------
 @app.route("/employee")
