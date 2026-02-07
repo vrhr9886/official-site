@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Employee Dashboard</title>
+
+<style>
+body{
+margin:0;
+font-family:Segoe UI;
+background:#eef1f5;
+}
+
+.sidebar{
+width:220px;
+height:100vh;
+background:#4e73df;
+color:white;
+position:fixed;
+padding-top:20px;
+}
+
+.sidebar h2{text-align:center;}
+
+.sidebar a{
+display:block;
+color:white;
+padding:12px 20px;
+text-decoration:none;
+}
+
+.sidebar a:hover{background:#2e59d9;}
+
+.topbar{
+margin-left:220px;
+background:white;
+padding:15px;
+font-size:18px;
+font-weight:bold;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.content{
+margin-left:220px;
+padding:25px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>Employee</h2>
+<a href="#">Dashboard</a>
+<a href="#">My Attendance</a>
+<a href="#">Salary</a>
+<a href="#">Notice</a>
+<a href="/logout">Logout</a>
+</div>
+
+<div class="topbar">
+Employee Dashboard
+</div>
+
+<div class="content">
+
+<div class="card">
+<h3>Welcome 👋</h3>
+Employee panel ready.
+</div>
+
+<div class="card">
+<h3>Information</h3>
+Attendance, salary and notice will appear here.
+</div>
+
+</div>
+
+</body>
+</html>
