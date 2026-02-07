@@ -35,9 +35,11 @@ def login():
         u=request.form.get("username")
         p=request.form.get("password")
         user=Employee.query.filter_by(username=u,password=p).first()
+
         if user:
             session["user"]=user.username
             session["role"]=user.role
+
             if user.role=="admin":
                 return redirect("/admin")
             else:
@@ -45,7 +47,7 @@ def login():
 
     return render_template("login.html")
 
-# -------- ADMIN DASHBOARD --------
+# -------- ADMIN --------
 @app.route("/admin")
 def admin():
     if session.get("role")!="admin":
@@ -66,7 +68,7 @@ def attendance():
 # -------- EMPLOYEE DASHBOARD --------
 @app.route("/employee")
 def employee():
-    if "user" not in session:
+    if session.get("role")!="employee":
         return redirect("/")
     return render_template("employee.html")
 
