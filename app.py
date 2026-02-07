@@ -26,7 +26,6 @@ with app.app_context():
         db.session.add_all([admin,e1,e2,e3,e4])
         db.session.commit()
 
-# -------- ATTENDANCE STORAGE --------
 attendance_data = []
 
 # -------- LOGIN --------
@@ -44,16 +43,9 @@ def login():
             else:
                 return redirect("/employee")
 
-    return """
-    <h2>VRHR Soft Solutions Login</h2>
-    <form method='post'>
-    Username:<br><input name='username'><br>
-    Password:<br><input name='password' type='password'><br><br>
-    <button>Login</button>
-    </form>
-    """
+    return render_template("login.html")
 
-# -------- ADMIN DASHBOARD --------
+# -------- ADMIN --------
 @app.route("/admin")
 def admin():
     if session.get("role")!="admin":
@@ -61,7 +53,7 @@ def admin():
     employees = Employee.query.all()
     return render_template("admin.html", employees=employees)
 
-# -------- ATTENDANCE PAGE --------
+# -------- ATTENDANCE --------
 @app.route("/attendance", methods=["GET","POST"])
 def attendance():
     if session.get("role")!="admin":
@@ -76,7 +68,7 @@ def attendance():
 def employee():
     if "user" not in session:
         return redirect("/")
-    return "<h2>Employee Dashboard Coming</h2><a href='/logout'>Logout</a>"
+    return "<h2>Employee Dashboard Coming Soon</h2><a href='/logout'>Logout</a>"
 
 @app.route("/logout")
 def logout():
