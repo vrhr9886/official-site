@@ -7,7 +7,7 @@ app.secret_key = "vrhr_secret"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
-# ---------- DATABASE ----------
+# ---------------- DATABASE ----------------
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -26,12 +26,12 @@ with app.app_context():
         db.session.add_all([admin,e1,e2,e3,e4])
         db.session.commit()
 
-# ---------- LOGIN ----------
+# ---------------- LOGIN ----------------
 @app.route("/", methods=["GET","POST"])
 def login():
     if request.method=="POST":
-        u=request.form["username"]
-        p=request.form["password"]
+        u=request.form.get("username")
+        p=request.form.get("password")
         user=Employee.query.filter_by(username=u,password=p).first()
         if user:
             session["user"]=user.username
@@ -41,16 +41,16 @@ def login():
             else:
                 return redirect("/employee")
 
-    return '''
+    return """
     <h2>VRHR Soft Solutions Login</h2>
-    <form method="post">
-    Username:<br><input name="username"><br>
-    Password:<br><input name="password" type="password"><br><br>
+    <form method='post'>
+    Username:<br><input name='username'><br>
+    Password:<br><input name='password' type='password'><br><br>
     <button>Login</button>
     </form>
-    '''
+    """
 
-# ---------- ADMIN DASHBOARD ----------
+# ---------------- ADMIN DASHBOARD ----------------
 @app.route("/admin")
 def admin():
     if session.get("role")!="admin":
@@ -58,18 +58,18 @@ def admin():
     employees = Employee.query.all()
     return render_template("dashboard.html", employees=employees)
 
-# ---------- EMPLOYEE PANEL ----------
+# ---------------- EMPLOYEE PANEL ----------------
 @app.route("/employee")
 def employee():
     if "user" not in session:
         return redirect("/")
-    return "<h2>Employee Dashboard Coming Soon</h2><a href='/logout'>Logout</a>"
+    return "<h2>Employee Dashboard Coming Soon</h2><br><a href='/logout'>Logout</a>"
 
-# ---------- LOGOUT ----------
+# ---------------- LOGOUT ----------------
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
 
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run()
