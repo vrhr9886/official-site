@@ -7,8 +7,7 @@ app.secret_key = "vrhr_secret"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
-# ------------------ DATABASE ------------------
-
+# -------- DATABASE --------
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -16,7 +15,6 @@ class Employee(db.Model):
     password = db.Column(db.String(50))
     role = db.Column(db.String(20))
 
-# first time database create
 with app.app_context():
     db.create_all()
     if not Employee.query.filter_by(username="vrhrsoftsolutions").first():
@@ -28,8 +26,7 @@ with app.app_context():
         db.session.add_all([admin,e1,e2,e3,e4])
         db.session.commit()
 
-# ------------------ ROUTES ------------------
-
+# -------- LOGIN --------
 @app.route("/", methods=["GET","POST"])
 def login():
     if request.method=="POST":
@@ -43,6 +40,7 @@ def login():
                 return redirect("/admin")
             else:
                 return redirect("/employee")
+
     return '''
     <h2>VRHR Soft Solutions Login</h2>
     <form method="post">
@@ -52,21 +50,20 @@ def login():
     </form>
     '''
 
+# -------- ADMIN PANEL --------
 @app.route("/admin")
 def admin():
     if session.get("role")!="admin":
         return redirect("/")
-    employees=Employee.query.all()
-    data="<h2>Admin Panel</h2><a href='/logout'>Logout</a><br><br>"
-    for e in employees:
-        data+=f"{e.name} ({e.role})<br>"
-    return data
+    employees = Employee.query.all()
+    return render_template("admin.html", employees=employees)
 
+# -------- EMPLOYEE PANEL --------
 @app.route("/employee")
 def employee():
     if "user" not in session:
         return redirect("/")
-    return "<h2>Employee Dashboard</h2><a href='/logout'>Logout</a>"
+    return "<h2>Employee Dashboard Coming...</h2><a href='/logout'>Logout</a>"
 
 @app.route("/logout")
 def logout():
