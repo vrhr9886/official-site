@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+<style>
+body{font-family:Arial;background:#f4f6f9;margin:0}
+.top{background:#0b5ed7;color:#fff;padding:15px;font-size:20px}
+.box{padding:20px}
+.card{background:#fff;padding:15px;margin:10px;border-radius:8px;box-shadow:0 0 10px #ddd}
+.btn{background:#0b5ed7;color:#fff;padding:8px 12px;border:none;border-radius:5px}
+</style>
+</head>
+<body>
+
+<div class="top">VRHR Soft Solutions - Admin Panel</div>
+
+<div class="box">
+<div class="card">
+<h3>Employees</h3>
+{% for e in employees %}
+{{e.name}} ({{e.role}})<br>
+{% endfor %}
+</div>
+
+<div class="card">
+<h3>Quick Actions</h3>
+<button class="btn">Add Employee</button>
+<button class="btn">Update Salary</button>
+<button class="btn">Attendance</button>
+<button class="btn">Send Notice</button>
+</div>
+
+<a href="/logout">Logout</a>
+
+</div>
+</body>
+</html>
