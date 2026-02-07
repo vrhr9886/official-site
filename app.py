@@ -7,7 +7,7 @@ app.secret_key = "vrhr_secret"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
-# -------- DATABASE --------
+# ---------- DATABASE ----------
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -26,7 +26,7 @@ with app.app_context():
         db.session.add_all([admin,e1,e2,e3,e4])
         db.session.commit()
 
-# -------- LOGIN --------
+# ---------- LOGIN ----------
 @app.route("/", methods=["GET","POST"])
 def login():
     if request.method=="POST":
@@ -50,21 +50,22 @@ def login():
     </form>
     '''
 
-# -------- ADMIN PANEL --------
+# ---------- ADMIN DASHBOARD ----------
 @app.route("/admin")
 def admin():
     if session.get("role")!="admin":
         return redirect("/")
     employees = Employee.query.all()
-    return render_template("admin.html", employees=employees)
+    return render_template("dashboard.html", employees=employees)
 
-# -------- EMPLOYEE PANEL --------
+# ---------- EMPLOYEE PANEL ----------
 @app.route("/employee")
 def employee():
     if "user" not in session:
         return redirect("/")
-    return "<h2>Employee Dashboard Coming...</h2><a href='/logout'>Logout</a>"
+    return "<h2>Employee Dashboard Coming Soon</h2><a href='/logout'>Logout</a>"
 
+# ---------- LOGOUT ----------
 @app.route("/logout")
 def logout():
     session.clear()
