@@ -45,7 +45,7 @@ def login():
 
     return render_template("login.html")
 
-# -------- ADMIN --------
+# -------- ADMIN DASHBOARD --------
 @app.route("/admin")
 def admin():
     if session.get("role")!="admin":
@@ -63,13 +63,14 @@ def attendance():
         attendance_data.append(name)
     return render_template("attendance.html", data=attendance_data)
 
-# -------- EMPLOYEE --------
+# -------- EMPLOYEE DASHBOARD --------
 @app.route("/employee")
 def employee():
     if "user" not in session:
         return redirect("/")
-    return "<h2>Employee Dashboard Coming Soon</h2><a href='/logout'>Logout</a>"
+    return render_template("employee.html")
 
+# -------- LOGOUT --------
 @app.route("/logout")
 def logout():
     session.clear()
