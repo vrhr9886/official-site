@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:url("{{ url_for('static', filename='images/a.jpeg') }}") center/cover no-repeat;
+  display:flex;
+  justify-content:right;
+  align-items:center;
+  min-height:100vh;
+  color:#fff;
+}
+
+.login-box{
+  margin-right:150px;
+  backdrop-filter:blur(6px);
+  width:320px;
+  padding:25px;
+  border-radius:12px;
+  background:transparent;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  text-align:center;
+}
+
+h2{ color:#2a2b2c; }
+
+input{
+  width:90%;
+  padding:10px;
+  margin:10px 0;
+  border-radius:6px;
+  border:none;
+  outline:none;
+  background-color: #eef4ef;
+}
+
+button{
+  width:140px;
+  padding:10px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  margin-top:15px;
+  font-weight:bold;
+  display:block;          /* 🔥 IMPORTANT */
+  margin-left:auto;
+  margin-right:auto;      /* optional: center align */
+}
+
+button:hover{
+  background-color:#727376;
+}
+
+.password-box{ position:relative; }
+.password-box span{
+  position:absolute;
+  right:18px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+}
+
+#otpBox{ display:none; }
+
+#timer{
+  display: inline-block;     /* 🔥 KEY LINE */
+  background-color:#727376;
+  font-size:12px;
+  color:#03ea35;
+  font-weight:700;
+  padding:3px 6px;           /* text ke around thoda gap */
+  border-radius:4px;         /* optional – thoda smooth look */
+}
+
+
+/* MESSAGE */
+.msg{
+  color:#d2d9d3;
+  display:none;
+  margin-top:10px;
+  font-weight: 700;
+  padding:10px;
+  font-size:14px;
+}
+
+.msg.error{
+  background:#fee2e2;
+  color:#7f1d1d;
+  border:1px solid #f87171;
+}
+
+.msg.success{
+  background:#dcfce7;
+  color:#166534;
+  border:1px solid #4ade80;
+}
+
+/* POPUP */
+#successPopup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+}
+.popup-box{
+  backdrop-filter:blur(6px);
+  padding:30px;
+  border-radius:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box" id="loginBox">
+  <h2>Admin Login</h2>
+
+  <div id="msgBox" class="msg1"></div>
+
+  <input id="username" placeholder="Username">
+
+  <div class="password-box">
+    <input id="password" type="password" placeholder="Password">
+    <span onclick="togglePassword()">👁️</span>
+  </div>
+
+  <!-- OTP BOX -->
+  <div id="otpBox">
+    <input id="otp" placeholder="Enter OTP">
+    <div id="timer">OTP expires in 00:30</div>
+
+    <!-- 🔥 SINGLE DYNAMIC BUTTON -->
+    <button id="otpBtn">Login</button>
+  </div>
+
+  <!-- SUBMIT BUTTON -->
+  <button id="btn" onclick="login()">Submit</button>
+</div>
+
+<div id="successPopup">
+  <div class="popup-box">
+    <h3>✅ Login Successful</h3>
+    <p>Redirecting...</p>
+  </div>
+</div>
+
+<script>
+let time = 30;
+let timerInterval;
+
+/* MESSAGE */
+function showMessage(text, type){
+  msgBox.innerText = text;
+  msgBox.className = "msg " + type;
+  msgBox.style.display = "block";
+  setTimeout(()=> msgBox.style.display="none",3000);
+}
+
+function togglePassword(){
+  password.type = password.type==="password" ? "text" : "password";
+}
+
+/* SUBMIT → SEND OTP */
+function login(){
+  fetch("/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:`username=${username.value}&password=${password.value}`
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status==="otp_sent"){
+      showMessage("OTP sent to your mail","success");
+
+      btn.style.display="none";
+      otpBox.style.display="block";
+
+      setLoginMode();
+      resetTimer();
+    }else{
+      showMessage("Invalid credentials","error");
+    }
+  });
+}
+
+/* TIMER */
+function resetTimer(){
+  clearInterval(timerInterval);
+  time = 30;
+  startTimer();
+}
+
+function startTimer(){
+  timerInterval = setInterval(()=>{
+    timer.innerText = `OTP expires in 00:${time<10?'0'+time:time}`;
+    time--;
+
+    if(time < 0){
+      clearInterval(timerInterval);
+      setResendMode();
+    }
+  },1000);
+}
+
+/* BUTTON MODES */
+function setLoginMode(){
+  otpBtn.innerText = "Login";
+  otpBtn.onclick = verifyOtp;
+}
+
+function setResendMode(){
+  otpBtn.innerText = "Resend OTP";
+  otpBtn.onclick = resendOtp;
+}
+
+/* VERIFY OTP */
+function verifyOtp(){
+  fetch("/verify-otp",{
+    method:"POST",
+    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:`otp=${otp.value}`
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status==="success"){
+      loginBox.style.display="none";
+      successPopup.style.display="flex";
+      setTimeout(()=>window.location="/dashboard",1000);
+    }
+    else if(d.status==="expired"){
+      setResendMode();
+    }
+    else{
+      showMessage("Invalid OTP","error");
+    }
+  });
+}
+
+/* RESEND OTP */
+function resendOtp(){
+  showMessage("Resending OTP...","success");
+
+  fetch("/resend-otp",{method:"POST"})
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status==="otp_sent"){
+      showMessage("OTP resent to your mail","success");
+      setLoginMode();
+      resetTimer();
+    }else{
+      showMessage("Failed to resend OTP","error");
+    }
+  });
+}
+</script>
+
+</body>
+</html>

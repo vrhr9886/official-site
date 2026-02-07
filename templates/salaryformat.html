@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Salary Slip - Admin</title>
+
+<style>
+body{
+    margin:0;
+    font-family:"Segoe UI", Arial, sans-serif;
+    background:linear-gradient(135deg,#eef2f7,#f8fafc);
+}
+
+/* full page container */
+.container{
+    width:100%;
+    min-height:100vh;
+    padding:40px 60px;
+    box-sizing:border-box;
+}
+
+/* card */
+.card{
+    background:#fff;
+    padding:35px 35px 35px 117px;
+    border-radius:16px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.15);
+}
+
+/* header */
+.header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.header h2{
+    margin:0;
+    font-size:26px;
+    color:#111827;
+}
+
+.header p{
+    margin-top:6px;
+    font-size:13px;
+    color:#6b7280;
+}
+
+/* grid rows */
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px 3px;
+}
+
+/* field */
+.field label{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    color:#6c7588;
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:0.7px;
+}
+
+.field input{
+    width:81%;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid #d1d5db;
+    font-size:14px;
+    background:#f9fafb;
+    transition:0.25s;
+}
+
+.field input:focus{
+    outline:none;
+    background:#fff;
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,0.18);
+}
+
+.field input:disabled{
+    background:#e5e7eb;
+    color:#6b7280;
+}
+
+/* buttons */
+.btn-group{
+    margin-top:35px;
+    text-align:center;
+}
+
+button{
+    padding:12px 26px;
+    border:none;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    margin-left: -49px;
+}
+
+.save-btn{ background:#22c55e; color:#052e16; }
+.edit-btn{ background:#3b82f6; color:#fff; display:none; margin-left:10px; }
+.print-btn{ background:#f97316; color:#fff; display:none; margin-left:10px; }
+
+/* print */
+@media print{
+    body{ background:#fff; }
+    button{ display:none; }
+    .card{ box-shadow:none; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <div class="header">
+            <h2>Employee Salary Slip</h2>
+            <p>Admin Payroll Management</p>
+        </div>
+
+        <form id="salaryForm">
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label>Employee Name</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="field">
+                    <label>Employee ID</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="field">
+                    <label>Salary Month</label>
+                    <input type="month" id="monthInput" required>
+                </div>
+
+                <div class="field">
+                    <label>Designation</label>
+                    <input type="text">
+                </div>
+
+                <div class="field">
+                    <label>Working Days</label>
+                    <input type="number">
+                </div>
+
+                <div class="field">
+                    <label>Bank Account</label>
+                    <input type="number">
+                </div>
+
+                <div class="field">
+                    <label>Deduction</label>
+                    <input type="number">
+                </div>
+
+                <div class="field">
+                    <label>Bank Name</label>
+                    <input type="text">
+                </div>
+
+                <div class="field">
+                    <label>Total Amount</label>
+                    <input type="text">
+                </div>
+
+                <div class="field">
+                    <label>UPI ID</label>
+                    <input type="text">
+                </div>
+
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="save-btn" onclick="saveData()">Show Salary Slip</button>
+                <button type="button" class="edit-btn" id="editBtn" onclick="editData()">Edit</button>
+                <button type="button" class="print-btn" id="printBtn" onclick="printSlip()">Print</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+function saveData(){
+    document.querySelectorAll("input").forEach(i => i.disabled = true);
+    editBtn.style.display="inline-block";
+    printBtn.style.display="inline-block";
+    alert("Salary Slip Saved Successfully!");
+}
+
+function editData(){
+    document.querySelectorAll("input").forEach(i => i.disabled = false);
+}
+
+function printSlip(){
+    window.print();
+}
+
+/* month limit */
+const year = new Date().getFullYear();
+monthInput.min = year + "-01";
+monthInput.max = "2030-12";
+</script>
+
+</body>
+</html>

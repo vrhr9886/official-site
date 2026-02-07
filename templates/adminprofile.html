@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile</title>
+
+    <style>
+        *{ box-sizing:border-box; }
+        body{
+            margin:0;
+            font-family:"Segoe UI", sans-serif;
+            background:#020617;
+            color:#fff;
+        }
+
+        .profile-container{
+            max-width:960px;
+            margin:50px auto;
+            background:#0f172a;
+            border-radius:18px;
+            box-shadow:0 30px 70px rgba(0,0,0,0.75);
+            padding:36px;
+        }
+
+        .profile-header{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            border-bottom:1px solid #1e293b;
+            padding-bottom:22px;
+        }
+
+        .profile-header h2{ margin:0; font-size:22px; font-weight:600; }
+
+        .logout-btn{
+            background:#ef4444;
+            border:none;
+            padding:10px 20px;
+            color:#fff;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+            transition:0.2s;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover{ background:#dc2626; }
+
+        .profile-body{
+            display:grid;
+            grid-template-columns:280px 1fr;
+            gap:40px;
+            margin-top:35px;
+        }
+
+        .profile-pic{ text-align:center; padding-top:10px; }
+
+        /* CIRCLE FIX: width aur height barabar honi chahiye */
+        .profile-pic img{
+            width:180px;
+            height:180px;
+            border-radius:50%;
+            object-fit:cover; /* Yeh zaruri hai taaki photo khinche nahi */
+            border:4px solid #38bdf8;
+            box-shadow:0 0 0 6px rgba(56,189,248,0.15);
+        }
+
+        .profile-pic input{ margin-top:18px; color:#cbd5f5; width: 100%; }
+
+        .details{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:28px 26px;
+        }
+
+        .field{ display:flex; flex-direction:column; }
+        .field label{
+            font-size:11px;
+            font-weight:600;
+            color:#94a3b8;
+            text-transform:uppercase;
+            letter-spacing:0.8px;
+            margin-bottom:6px;
+        }
+
+        .field input{
+            width:100%;
+            height:44px;
+            padding:0 16px;
+            border-radius:11px;
+            border:1px solid #1e293b;
+            background:#020617;
+            color:#ffffff;
+            font-size:14px;
+            transition:0.25s ease;
+        }
+
+        .field input:focus{
+            outline:none;
+            border-color:#38bdf8;
+            box-shadow:0 0 0 3px rgba(56,189,248,0.25);
+        }
+
+        .full{ grid-column:span 2; }
+
+        .actions{ margin-top:45px; text-align:center; }
+        .save{
+            padding:13px 36px;
+            border:none;
+            border-radius:12px;
+            cursor:pointer;
+            font-size:15px;
+            font-weight:600;
+            transition:0.25s;
+            background:#22c55e;
+            color:#052e16;
+        }
+
+        .save:hover{ background:#16a34a; }
+
+        @media(max-width:850px){
+            .profile-body{ grid-template-columns:1fr; }
+            .details{ grid-template-columns:1fr; }
+            .full{ grid-column:span 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>Admin Profile</h2>
+<a href="{{ url_for('logout') }}" style="text-decoration: none;">
+        <button type="button" class="logout-btn">Logout</button>
+    </a>    </div>
+
+    <form id="profileForm" action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+        <div class="profile-body">
+            
+            <div class="profile-pic">
+                <img id="profileImage" 
+                     src="{{ url_for('static', filename='uploads/' + (profile.image if profile and profile.image else 'default.png')) }}">
+                <input type="file" name="image" accept="image/*" onchange="previewImage(event)">
+            </div>
+
+            <div class="details">
+                <div class="field">
+                    <label>Full Name</label>
+                    <input type="text" name="name" value="{{ profile.name if profile else 'Demo Admin' }}">
+                </div>
+
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" name="email" value="{{ profile.email if profile else 'admin@example.com' }}">
+                </div>
+
+                <div class="field">
+                    <label>Role</label>
+                    <input type="text" name="role" value="{{ profile.role if profile else 'Administrator' }}">
+                </div>
+
+                <div class="field">
+                    <label>Phone</label>
+                    <input type="text" name="phone" value="{{ profile.phone if profile else '9876543210' }}">
+                </div>
+
+                <div class="field full">
+                    <label>Address</label>
+                    <input type="text" name="address" value="{{ profile.address if profile else 'Demo Address, India' }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="save">Save Profile</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function previewImage(event){
+    const reader = new FileReader();
+    const imageField = document.getElementById("profileImage");
+    
+    reader.onload = () => {
+        if(reader.readyState === 2){
+            imageField.src = reader.result;
+        }
+    };
+    if(event.target.files[0]){
+        reader.readAsDataURL(event.target.files[0]);
+    }
+}
+</script>
+
+</body>
+</html>
